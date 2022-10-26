@@ -15,7 +15,7 @@ const Document = mongoose.Document;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 export type MeetingDocument = Meeting & Document & { _id: string };
 
-@Schema({ strict: false })
+@Schema({ strict: false, strictQuery: false })
 export class Meeting extends Document {
   @Prop([{ type: ObjectId }])
   hostIds: Contact[];
@@ -31,6 +31,12 @@ export class Meeting extends Document {
 
   @Prop({ type: ObjectId })
   guestCompanyId: Company;
+
+  @Prop({ type: ObjectId })
+  eventId: string;
+
+  @Prop({ type: Date })
+  startTime: Date;
 
   @Prop({ type: ObjectId, ref: Table.name })
   tableId: Table;

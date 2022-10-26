@@ -80,4 +80,12 @@ export class CompanyMongooseService {
       },
     );
   }
+
+  async getCompanies(query, projections, options?) {
+    return this.companyModel.find(query, projections, options);
+  }
+
+  async getContacts(query, projections, options?) {
+    return this.contactModel.find(query, projections, options);
+  }
 }

@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Model, QueryOptions } from 'mongoose';
+import { Event } from '../models/event.schema';
 import { Branding } from '../models/branding.schema';
 import { City } from '../models/city.schema';
 import { Company } from '../models/company.schema';

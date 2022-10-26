@@ -3,7 +3,6 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import { AppModule } from './app.module';
-import { buildDocument } from './core/services/buildDocument';
 import { ExchangeType, RabbitMQServer } from './core/services/rmq';
 
 async function bootstrap() {
@@ -22,7 +21,6 @@ async function bootstrap() {
 
   app.setGlobalPrefix('/api/v0.3/reporting');
   app.enableCors();
-  buildDocument(app);
   const port = 3000;
   await app.startAllMicroservices();
   await app.listen(port);

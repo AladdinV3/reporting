@@ -10,7 +10,7 @@ import {
 const Document = mongoose.Document;
 export type ContactDocument = Contact & Document & { _id: string };
 
-@Schema({ strict: false })
+@Schema({ strict: false, strictQuery: false })
 export class Contact extends Document {}
 
 const allProjectionFieldArray = [];

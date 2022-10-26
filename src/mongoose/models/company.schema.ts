@@ -22,7 +22,7 @@ export class Sector extends Document {
   categories: Category[];
 }
 
-@Schema({ strict: false })
+@Schema({ strict: false, strictQuery: false })
 export class Company extends Document {
   @Prop({ type: ObjectId, ref: Contact.name })
   contacts: Contact[];

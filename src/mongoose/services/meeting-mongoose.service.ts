@@ -12,6 +12,10 @@ export class MeetingMongooseService {
     @Inject('CONTACT_MODEL') private contactModel: Model<Contact>,
   ) {}
 
+  async find(query, projections, options?) {
+    return this.meetingModel.find(query, projections, options);
+  }
+
   async findById(id: string, projection, options: QueryOptions) {
     return this.meetingModel.findById(id, projection, options);
   }

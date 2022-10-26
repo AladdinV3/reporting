@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,300;1,900&display=swap"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <title>Email Confirmation</title>
+    <style type="text/css">
+      @font-face {
+        font-family: 'Roboto';
+        src: url('Roboto/Roboto-Regular.ttf');
+      }
+      button {
+        cursor: pointer;
+        color: white;
+        background-color: #2d3446;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        appearance: button;
+        -webkit-appearance: button;
+        -moz-appearance: button;
+      }
+      .wrapper {
+        max-width: 500px;
+        margin: 0 auto;
+        background-color: #f1f3f6;
+        border-radius: 10px;
+      }
+      .content {
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="content">
+        <pre><%= content %></pre>
+      </div>
+    </div>
+  </body>
+</html>
