@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppLoggerMiddleware, AuthorizerMiddleware } from '@aldb2b/common';
 import { HealthCheckModule } from './health-check/health-check.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { MessageBrokerModule } from './message-broker/message-broker.module';
+import { MessageBrokerSenderModule } from './message-broker-sender/message-broker-sender.module';
 import { MongooseNewModule } from './mongoose/mongoose-new.module';
 import { AgendaModule } from './agendas/agenda.module';
 import { AgendasController } from './agendas/controllers/agendas.controller';
@@ -30,7 +30,7 @@ import { PDFGeneratorModule } from './pdf-generator/pdf-generator.module';
     ]),
     MongooseNewModule,
     HealthCheckModule,
-    MessageBrokerModule,
+    MessageBrokerSenderModule,
     AgendaModule,
     HTMLGeneratorModule,
     PDFGeneratorModule,

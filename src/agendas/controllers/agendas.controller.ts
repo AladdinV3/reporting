@@ -25,7 +25,6 @@ export class AgendasController {
       'Content-Disposition': 'attachment; filename=' + fileName,
     });
     return new StreamableFile(pdf);
-    // return this.agendaService.downloadAgenda(downloadDto, eventId);
   }
 
   @Get('/send')

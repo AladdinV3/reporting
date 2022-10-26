@@ -86,4 +86,12 @@ export class MeetingMongooseService {
       { lean: true, populate: { path: 'country', select: '_id name' } },
     );
   }
+
+  public async distinctValues(field: string, query) {
+    return this.meetingModel.distinct(field, query);
+  }
+
+  public async aggregate(aggregation) {
+    return this.meetingModel.aggregate(aggregation);
+  }
 }

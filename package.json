@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@aldb2b/common": "^1.0.213",
+    "@aldb2b/common": "^1.0.223",
     "@golevelup/nestjs-rabbitmq": "^2.2.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.0",
@@ -29,6 +29,7 @@
     "@nestjs/microservices": "^8.2.0",
     "@nestjs/mongoose": "^9.0.1",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/schedule": "^2.1.0",
     "@types/amqplib": "^0.8.2",
     "@types/lodash": "^4.14.176",
     "amqp-connection-manager": "^3.7.0",

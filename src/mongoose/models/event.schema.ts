@@ -16,6 +16,9 @@ export type EventDocument = Event & Document & { _id: string };
 export class Event extends Document {
   @Prop({ type: ObjectId, ref: EventType.name })
   eventTypeId: EventType;
+
+  @Prop({ type: String })
+  name: string;
 }
 
 const allProjectionFieldArray = [];

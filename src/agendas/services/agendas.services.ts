@@ -6,6 +6,9 @@ import { PDFGeneratorService } from 'src/pdf-generator/services/pdf-generator.se
 import { EventMongooseService } from 'src/mongoose/services/event-mongoose.service';
 import { CompanyMongooseService } from 'src/mongoose/services/company-mongoose.service';
 import { MeetingMongooseService } from 'src/mongoose/services/meeting-mongoose.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { addHours } from '@aldb2b/common';
+import { AgendaEmail } from './agenda-email';
 
 @Injectable()
 export class AgendasService {
@@ -40,12 +43,8 @@ export class AgendasService {
     private meetingService: MeetingMongooseService,
   ) {}
 
-  private addHours(hours: number, date: Date) {
-    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
-    return date;
-  }
-
   async downloadAgenda(downloadDto: DownloadAgendaDto, eventId: string) {
+    const event = await this.eventService.findById(eventId, {}, []);
     const meetings = await this.getMeetings(eventId, downloadDto);
 
     const classifiedMeetings = this.getClassifiedMeetingsByDate(meetings);
@@ -105,7 +104,7 @@ export class AgendasService {
       content,
     });
     const pdf = await this.pdfGeneratorService.generate(htmlContent);
-    return { pdf, fileName: 'test.pdf' };
+    return { pdf, fileName: `${event?.name}.pdf` };
   }
 
   private getMeetingDetails(meeting, contacts, companies) {
@@ -224,7 +223,7 @@ export class AgendasService {
     if (downloadDto.meetingDate) {
       query['startTime'] = {
         $gte: downloadDto.meetingDate,
-        $lte: this.addHours(24, new Date(downloadDto.meetingDate)),
+        $lte: addHours(24, new Date(downloadDto.meetingDate)),
       };
     }
     return this.meetingService.find(
@@ -320,4 +319,10 @@ export class AgendasService {
   }
 
   async sendAgenda(sendDto: SendAgendaDto, eventId: string) {}
+
+  @Cron(CronExpression.EVERY_HOUR)
+  async sendAgendaEmails() {
+    const agendaEmails = new AgendaEmail(this.meetingService);
+    await agendaEmails.sendAgendaEmails();
+  }
 }
