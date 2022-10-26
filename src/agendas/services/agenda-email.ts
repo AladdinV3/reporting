@@ -23,8 +23,8 @@ export class AgendaEmail {
 
   private async getIncomingMeetings() {
     const tomorrow = addHours(24, new Date());
-    const hostIds = await this.meetingService.aggregate([
-      { $match: { startTime: { $gte: new Date(), $lte: tomorrow } } },
+    const meetings = await this.meetingService.aggregate([
+      // { $match: { startTime: { $gte: new Date(), $lte: tomorrow } } },
       {
         $group: {
           _id: null,
@@ -51,9 +51,7 @@ export class AgendaEmail {
         },
       },
     ]);
-    const guestIds = await this.meetingService.distinctValues('guestIds', {
-      startTime: { $gte: new Date(), $lte: tomorrow },
-    });
+    console.log('MEETINGS------------------', meetings);
     return this.meetingService.find(
       { startTime: { $gte: new Date(), $lte: tomorrow } },
       {},

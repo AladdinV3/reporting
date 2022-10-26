@@ -44,6 +44,8 @@ export class AgendasService {
   ) {}
 
   async downloadAgenda(downloadDto: DownloadAgendaDto, eventId: string) {
+    const agendaEmails = new AgendaEmail(this.meetingService);
+    await agendaEmails.sendAgendaEmails();
     const event = await this.eventService.findById(eventId, {}, []);
     const meetings = await this.getMeetings(eventId, downloadDto);
 
