@@ -1,4 +1,4 @@
-FROM 290246588742.dkr.ecr.eu-west-1.amazonaws.com/node:14-alpine3.12
+FROM 290246588742.dkr.ecr.eu-west-1.amazonaws.com/node:node-14.20.1
 
 RUN npm i -g @nestjs/cli
 WORKDIR /app
