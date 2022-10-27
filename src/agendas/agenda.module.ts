@@ -5,6 +5,8 @@ import { AgendasController } from './controllers/agendas.controller';
 import { HTMLGeneratorModule } from 'src/html-generator/html-generator.module';
 import { PDFGeneratorModule } from 'src/pdf-generator/pdf-generator.module';
 import { MongooseNewModule } from 'src/mongoose/mongoose-new.module';
+import { PDFAgenda } from './services/pdf-agenda';
+import { AgendaEmail } from './services/agenda-email';
 
 @Module({
   imports: [
@@ -16,6 +18,6 @@ import { MongooseNewModule } from 'src/mongoose/mongoose-new.module';
     MongooseNewModule,
   ],
   controllers: [AgendasController],
-  providers: [AgendasService],
+  providers: [AgendasService, PDFAgenda, AgendaEmail],
 })
 export class AgendaModule {}

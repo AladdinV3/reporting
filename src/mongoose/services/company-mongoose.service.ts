@@ -88,4 +88,8 @@ export class CompanyMongooseService {
   async getContacts(query, projections, options?) {
     return this.contactModel.find(query, projections, options);
   }
+
+  async getContact(query, projections, options?) {
+    return this.contactModel.findOne(query, projections, options);
+  }
 }

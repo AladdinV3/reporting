@@ -8,20 +8,42 @@ import { CompanyMongooseService } from 'src/mongoose/services/company-mongoose.s
 import { MeetingMongooseService } from 'src/mongoose/services/meeting-mongoose.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { addHours } from '@aldb2b/common';
+import { PDFAgenda } from './pdf-agenda';
+import { AuthorizedS3 } from 'src/core/services/AWS';
+import { S3 } from 'aws-sdk';
+import { S3Buckets } from 'src/core/config/config';
 
 @Injectable()
 export class AgendaEmail {
-  constructor(private meetingService: MeetingMongooseService) {}
+  constructor(
+    private meetingService: MeetingMongooseService,
+    private pdfAgenda: PDFAgenda,
+    private eventService: EventMongooseService,
+    private companyService: CompanyMongooseService,
+  ) {}
 
   async sendAgendaEmails() {
-    const agendas = await this.getIncomingMeetings();
-    agendas.forEach((agenda) => {
-      const emailContent = this.prepareEmailContent(agenda);
-      this.sendEmail(emailContent);
+    const contactIds = await this.getContactIds();
+    contactIds.forEach(async (contactId) => {
+      const agendas = await this.getContactAgendas(contactId);
+      const event = await this.eventService.findById(
+        agendas[0].eventId,
+        {},
+        {},
+      );
+      const { pdf, fileName } = await this.pdfAgenda.generate(agendas, event);
+      await this.uploadPdfAgendaToS3(pdf);
+      const contact = await this.companyService.getContact(
+        { _id: contactId },
+        {},
+        { lean: true },
+      );
+      const emailContent = await this.prepareEmailContent(contact);
+      await this.sendEmail(emailContent);
     });
   }
 
-  private async getIncomingMeetings() {
+  private async getContactIds() {
     const tomorrow = addHours(24, new Date());
     const meetings = await this.meetingService.aggregate([
       // { $match: { startTime: { $gte: new Date(), $lte: tomorrow } } },
@@ -51,12 +73,37 @@ export class AgendaEmail {
         },
       },
     ]);
-    console.log('MEETINGS------------------', meetings);
+    return meetings.length > 0
+      ? [
+          ...new Set([
+            ...meetings[0].hostIds.filter((item) => !!item).map(String),
+            ...meetings[0].guestIds.filter((item) => !!item).map(String),
+          ]),
+        ]
+      : [];
+  }
+
+  private async getContactAgendas(contactId: string) {
+    const tomorrow = addHours(24, new Date());
     return this.meetingService.find(
-      { startTime: { $gte: new Date(), $lte: tomorrow } },
+      {
+        $or: [{ guestIds: contactId }, { hostIds: contactId }],
+        startTime: { $gte: new Date(), $lte: tomorrow },
+      },
       {},
-      { lean: true },
+      { lean: true, sort: { startTime: 1 } },
     );
+  }
+
+  private async uploadPdfAgendaToS3(pdf) {
+    const fileName = `Agenda-${new Date().getTime()}.pdf`;
+    const params: S3.PutObjectRequest = {
+      Bucket: S3Buckets.attachment,
+      Key: fileName,
+      Body: pdf,
+    };
+    await AuthorizedS3.upload(params).promise();
+    return fileName;
   }
 
   private prepareEmailContent(agenda) {}

@@ -2,16 +2,16 @@ export const maximumQueryRecords = 50;
 export const S3Buckets =
   process.env.RUNNING_ENVIRONMENT === 'STAGING'
     ? {
-        attachment: 'aladdinb2b-search-staging',
+        attachment: 'aladdinb2b-attachment-staging',
         brandingImages: 'aladdinb2b-event-branding-staging',
       }
     : process.env.RUNNING_ENVIRONMENT === 'STAGING'
     ? {
-        attachment: 'aladdinb2b-search-prod',
+        attachment: 'aladdinb2b-attachment-prod',
         brandingImages: 'aladdinb2b-event-branding-prod',
       }
     : {
-        attachment: 'aladdinb2b-search',
+        attachment: 'aladdinb2b-attachment',
         brandingImages: 'aladdinb2b-event-branding-staging',
       };
 

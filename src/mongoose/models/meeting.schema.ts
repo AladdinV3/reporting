@@ -32,7 +32,7 @@ export class Meeting extends Document {
   @Prop({ type: ObjectId })
   guestCompanyId: Company;
 
-  @Prop({ type: ObjectId })
+  @Prop({ type: String })
   eventId: string;
 
   @Prop({ type: Date })
