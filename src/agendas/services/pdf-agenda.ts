@@ -93,7 +93,7 @@ export class PDFAgenda {
       content,
     });
     const pdf = await this.pdfGeneratorService.generate(htmlContent);
-    return { pdf, fileName: `${event?.name}.pdf` };
+    return pdf;
   }
 
   private getClassifiedMeetingsByDate(meetings) {
@@ -118,15 +118,16 @@ export class PDFAgenda {
   }
 
   private getContactIds(meetings) {
-    return meetings
+    const contactIds = meetings
       .map((meeting) =>
         [
           meeting.hostIds.filter((id) => !!id).map(String),
           meeting.guestIds.filter((id) => !!id).map(String),
-          meeting.createdBy,
+          meeting.createdBy ? String(meeting.createdBy) : null,
         ].flat(),
       )
       .flat();
+    return [...new Set(contactIds)] as string[];
   }
 
   private getCompanyIds(meetings) {
@@ -281,4 +282,6 @@ export class PDFAgenda {
           >
           </td>`;
   }
+
+  private getAgendaName(eventName, downloadDto) {}
 }

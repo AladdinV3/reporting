@@ -26,5 +26,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   ],
   controllers: [],
   providers: [MessageBrokerSenderService],
+  exports: [MessageBrokerSenderService],
 })
 export class MessageBrokerSenderModule {}

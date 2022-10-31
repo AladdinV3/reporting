@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import {
   validateProjection,
   validateNewItem,

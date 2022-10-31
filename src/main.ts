@@ -24,6 +24,6 @@ async function bootstrap() {
   const port = 3000;
   await app.startAllMicroservices();
   await app.listen(port);
-  logger.log(`search service listening on port ${port}`);
+  logger.log(`Reporting service listening on port ${port}`);
 }
 bootstrap();
