@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { HTMLGeneratorService } from 'src/html-generator/services/html-generator.services';
 import { PDFGeneratorService } from 'src/pdf-generator/services/pdf-generator.services';
 import { CompanyMongooseService } from 'src/mongoose/services/company-mongoose.service';
+import { S3Buckets } from 'src/core/config/config';
+import { AuthorizedS3 } from 'src/core/services/AWS';
 
 @Injectable()
 export class PDFAgenda {
@@ -91,9 +93,26 @@ export class PDFAgenda {
 
     const htmlContent = await this.htmlGeneratorService.generate({
       content,
+      logo: await this.getLogo(event),
     });
     const pdf = await this.pdfGeneratorService.generate(htmlContent);
     return pdf;
+  }
+
+  private async getLogo(event) {
+    return event?.brandings[0]?.logoImage
+      ? await this.downloadLogo(event?.brandings[0]?.logoImage)
+      : null;
+  }
+
+  private async downloadLogo(fileKey: string): Promise<Buffer> {
+    const params = {
+      Bucket: S3Buckets.brandingImages,
+      Key: fileKey,
+    };
+
+    const downloadedFile = await AuthorizedS3.getObject(params).promise();
+    return downloadedFile.Body as Buffer;
   }
 
   private getClassifiedMeetingsByDate(meetings) {

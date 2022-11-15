@@ -24,7 +24,7 @@ export class AgendasService {
     eventId: string,
     user: HeaderUser,
   ) {
-    const event = await this.eventService.findById(eventId, {}, []);
+    const event = await this.eventService.findById(eventId, {}, { lean: true });
     const meetings = await this.getMeetings(eventId, downloadDto, user);
     const reportName = this.getReportName(event?.name, downloadDto);
     const pdf = await this.pdfAgenda.generate(meetings, event);

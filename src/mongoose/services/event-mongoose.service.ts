@@ -5,6 +5,8 @@ import { Branding } from '../models/branding.schema';
 import { City } from '../models/city.schema';
 import { Company } from '../models/company.schema';
 import { Country } from '../models/country.schema';
+import { presignedUrlExpiration, S3Buckets } from 'src/core/config/config';
+import { AuthorizedS3 } from 'src/core/services/AWS';
 
 @Injectable()
 export class EventMongooseService {
@@ -17,7 +19,15 @@ export class EventMongooseService {
   ) {}
 
   async findById(id: string, projection, options: QueryOptions) {
-    return this.eventModel.findById(id, projection, options);
+    const [event, brandings] = await Promise.all([
+      this.eventModel.findById(id, projection, options),
+      this.getBrandingsByEventId(id),
+    ]);
+    brandings;
+    return {
+      ...event,
+      brandings,
+    };
   }
 
   async getModifiedModel(id: string) {
