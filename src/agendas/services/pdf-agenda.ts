@@ -4,6 +4,8 @@ import { PDFGeneratorService } from 'src/pdf-generator/services/pdf-generator.se
 import { CompanyMongooseService } from 'src/mongoose/services/company-mongoose.service';
 import { S3Buckets } from 'src/core/config/config';
 import { AuthorizedS3 } from 'src/core/services/AWS';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class PDFAgenda {
@@ -102,17 +104,26 @@ export class PDFAgenda {
   private async getLogo(event) {
     return event?.brandings[0]?.logoImage
       ? await this.downloadLogo(event?.brandings[0]?.logoImage)
-      : null;
+      : this.getDefaultLogo();
   }
 
-  private async downloadLogo(fileKey: string): Promise<Buffer> {
+  private getDefaultLogo(): string {
+    return readFileSync(
+      join(__dirname, '../../../templates/emails/aladdin_logo.png'),
+      {
+        encoding: 'base64',
+      },
+    );
+  }
+
+  private async downloadLogo(fileKey: string): Promise<string> {
     const params = {
       Bucket: S3Buckets.brandingImages,
       Key: fileKey,
     };
 
     const downloadedFile = await AuthorizedS3.getObject(params).promise();
-    return downloadedFile.Body as Buffer;
+    return Buffer.from(downloadedFile.Body as Buffer).toString('base64');
   }
 
   private getClassifiedMeetingsByDate(meetings) {
